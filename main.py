@@ -1,28 +1,21 @@
 import sys
 from flask import Flask
+from flask_simpleldap import LDAP
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
 class User(object):
-    def __init__(self, id, username, password):
-        self.id = id
+    def __init__(self, username, groups):
         self.username = username
-        self.password = password
+        self.groups = groups
 
     def __str__(self):
-        return "User(id='%s')" % self.id
-
-users = [
-    User(1, 'tristan', 'abcd'),
-    User(2, 'albin', 'azerty')
-]
-
-username_table = { u.username: u for u in users }
-userid_table = { u.id: u for u in users }
+        return "username : {}\ngroups : {}".format(self.username, self.groups)
 
 def authenticate(username, password):
-    user = username_table.get(username, None)
-    if user and safe_str_cmp(user.password.encode('utf-8'), password.encode('utf-8')):
+    #user = username_table.get(username, None)
+    user = ldap.bind_user(username, password)
+    if user and password != '':
         return user
 
 def identity(payload):
@@ -31,8 +24,15 @@ def identity(payload):
 
 app = Flask(__name__)
 app.debug = True
+app.secret_key = "S3CR3T"
 app.config['SECRET_KEY'] = 'S3CR3T'
+app.config['LDAP_HOST'] = 'ad-crypto.epsi.intra'
+app.config['LDAP_BASE_DN'] = 'cn=Users,dc=epsi,dc=intra'
+app.config['LDAP_USERNAME'] = 'cn=Administrator,cn=Users,dc=epsi,dc=intra'
+app.config['LDAP_PASSWORD'] = 'P@ssw0rd'
+app.config['LDAP_USER_OBJECT_FILTER'] = '(sAMAccountName=%s)'
 
+ldap = LDAP(app)
 jwt = JWT(app, authenticate, identity)
 
 @app.route("/")
