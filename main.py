@@ -1,5 +1,5 @@
 import sys
-from flask import Flask
+from flask import Flask, jsonify
 from flask_simpleldap import LDAP
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
@@ -15,6 +15,7 @@ class User(object):
 def authenticate(username, password):
     user = ldap.bind_user(username, password)
     if user and password != '':
+        print(json.dumps(ldap.get_object_details(user=username)))
         return user
 
 def identity(payload):
