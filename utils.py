@@ -5,10 +5,27 @@ from flask_simpleldap import LDAP
 from flask_jwt import JWT
 from user import User, CertState
 
+def absolute_path(relative_path):
+    current_dir = os.path.dirname(__file__)
+    return os.path.join(current_dir, path)
+
+def create_file_tree():
+    dirs = [
+        'certificates',
+        'certificates/pending',
+        'certificates/revoked',
+        'certificates/issued'
+    ]
+    for directory in dirs:
+        directory = absolute_path('certificates')
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
 def init_flask():
     app = Flask(__name__)
     app.debug = True
     app.secret_key = "S3CR3T"
+    create_file_tree()
     return app
 
 def init_ldap(app):
@@ -35,11 +52,12 @@ def init_jwt(app, ldap):
 
     return JWT(app, authenticate, identity)
 
+
 def listfiles(path):
-    current_dir = os.path.dirname(__file__)
-    cert_dir = os.path.join(current_dir, path)
+    cert_dir = absolute_path(path)
     with os.scandir(cert_dir) as directory:
         return [entry.name for entry in directory if entry.is_file()]
+
 
 def list_certificates(state=None):
     if CertState.PENDING.value == state:
