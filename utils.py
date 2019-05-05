@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_simpleldap import LDAP
 from flask_jwt import JWT
+from user import User
 
 def init_flask():
     app = Flask(__name__)
@@ -35,3 +36,17 @@ def init_jwt(app, ldap):
 def listfiles(path):
     with os.scandir(path) as directory:
         return [entry.name for entry in directory if entry.is_file()]
+
+def list_certificates(state=None):
+    if CertState.PENDING.value == state:
+        return listfiles('certificates/pending')
+    elif CertState.ISSUED.value == state:
+        return listfiles('certificates/issued')
+    elif CertState.REVOKED.value == state:
+        return listfiles('certificates/revoked')
+    else:
+        return [
+            list_certificates(CertState.PENDING.value),
+            list_certificates(CertState.ISSUED.value),
+            list_certificates(CertState.REVOKED.value)
+        ]

@@ -2,7 +2,6 @@ import datetime
 import os
 
 from enum import Enum
-from utils import listfiles
 
 class CertState(Enum):
     PENDING = 'PENDING'
@@ -27,16 +26,3 @@ class User(object):
         f.write(content)
         f.close()
 
-    def list_certificates(self, state=None):
-        if CertState.PENDING.value == state:
-            return listfiles('certificates/pending')
-        elif CertState.ISSUED.value == state:
-            return listfiles('certificates/issued')
-        elif CertState.REVOKED.value == state:
-            return listfiles('certificates/revoked')
-        else:
-            return [
-                self.list_certificates(CertState.PENDING.value),
-                self.list_certificates(CertState.ISSUED.value),
-                self.list_certificates(CertState.REVOKED.value)
-            ]
