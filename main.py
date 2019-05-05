@@ -1,47 +1,41 @@
 import sys
 import json
 
-from flask import Flask
+from utils import init_flask, init_ldap, init_jwt
+
+from flask import Flask, request
 from flask_simpleldap import LDAP
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
-class User(object):
-    def __init__(self, id, groups):
-        self.id = id
-        self.groups = groups
-
-    def __str__(self):
-        return "username : {}\ngroups : {}".format(self.id, self.groups)
-
-def authenticate(username, password):
-    binded = ldap.bind_user(username, password)
-    if binded and password != '':
-        user_groups = ldap.get_user_groups(user=username)
-        user = User(username, user_groups)
-        return user
-
-def identity(payload):
-    user_name = payload['identity']
-    user_groups = ldap.get_user_groups(user=user_name)
-    return User(user_name, user_groups)
-
-app = Flask(__name__)
-app.debug = True
-app.secret_key = "S3CR3T"
-app.config['LDAP_HOST'] = 'ad-crypto.epsi.intra'
-app.config['LDAP_BASE_DN'] = 'cn=Users,dc=epsi,dc=intra'
-app.config['LDAP_USERNAME'] = 'cn=Administrator,cn=Users,dc=epsi,dc=intra'
-app.config['LDAP_PASSWORD'] = 'P@ssw0rd'
-app.config['LDAP_USER_OBJECT_FILTER'] = '(sAMAccountName=%s)'
-
-ldap = LDAP(app)
-jwt = JWT(app, authenticate, identity)
+app  = init_flask()
+ldap = init_ldap(app)
+jwt  = init_jwt(app)
 
 @app.route("/")
 @jwt_required()
 def index():
     return "%s\n" % current_identity
+
+
+@app.route("/cert", methods=['GET', 'POST'])
+@jwt_required()
+def certificates():
+    if request.method == 'GET':
+        current_identity.list_certificates(request.args['filter'])
+    elif request.method == 'POST':
+        content = json.loads(request.data['request'])
+        create_certificates(current_identity.user_name, content)
+
+
+@app.route("/cert/<cert_id>", methods=['GET', 'DELETE'])
+@jwt_required()
+def certificate_details(cert_id):
+    if request.method == 'GET':
+        list_certificates(cert_id)
+    elif request.method == 'DELETE':
+        revoke_certificates(cert_id)
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(sys.argv[1]), debug=True)
