@@ -3,9 +3,8 @@ import json
 
 from utils import init_flask, init_ldap, init_jwt
 
-from flask import Flask, request
-from flask_simpleldap import LDAP
-from flask_jwt import JWT, jwt_required, current_identity
+from flask import request
+from flask_jwt import jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
 app  = init_flask()

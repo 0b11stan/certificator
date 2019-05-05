@@ -1,4 +1,6 @@
-from user import User
+from flask import Flask
+from flask_simpleldap import LDAP
+from flask_jwt import JWT
 
 def init_flask():
     app = Flask(__name__)
@@ -6,7 +8,7 @@ def init_flask():
     app.secret_key = "S3CR3T"
     return app
 
-def init_ldap():
+def init_ldap(app):
     app.config['LDAP_HOST'] = 'ad-crypto.epsi.intra'
     app.config['LDAP_BASE_DN'] = 'cn=Users,dc=epsi,dc=intra'
     app.config['LDAP_USERNAME'] = 'cn=Administrator,cn=Users,dc=epsi,dc=intra'
