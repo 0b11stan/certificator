@@ -7,7 +7,7 @@ from user import User, CertState
 
 def absolute_path(relative_path):
     current_dir = os.path.dirname(__file__)
-    return os.path.join(current_dir, path)
+    return os.path.join(current_dir, relative_path)
 
 def create_file_tree():
     dirs = [
@@ -16,8 +16,8 @@ def create_file_tree():
         'certificates/revoked',
         'certificates/issued'
     ]
-    for directory in dirs:
-        directory = absolute_path('certificates')
+    for relative_path in dirs:
+        directory = absolute_path(relative_path)
         if not os.path.exists(directory):
             os.makedirs(directory)
 
