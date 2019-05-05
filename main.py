@@ -1,7 +1,7 @@
 import sys
 import json
 
-from utils import init_flask, init_ldap, init_jwt
+from utils import init_flask, init_ldap, init_jwt, list_certificates
 
 from flask import request
 from flask_jwt import jwt_required, current_identity
