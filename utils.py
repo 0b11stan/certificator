@@ -37,7 +37,7 @@ def init_jwt(app, ldap):
 
 def listfiles(path):
     current_dir = os.path.dirname(__file__)
-    cert_dir = os.path.join(current_dir, cert_dir)
+    cert_dir = os.path.join(current_dir, path)
     with os.scandir(cert_dir) as directory:
         return [entry.name for entry in directory if entry.is_file()]
 
