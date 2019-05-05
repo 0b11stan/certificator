@@ -22,7 +22,7 @@ def index():
 @jwt_required()
 def certificates():
     if request.method == 'GET':
-        list_certificates(state=request.args.get('filter'))
+        return json.dumps(list_certificates(state=request.args.get('filter')))
     elif request.method == 'POST':
         content = json.loads(request.data['request'])
         create_certificates(current_identity.user_name, content)
