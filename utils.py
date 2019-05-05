@@ -36,7 +36,9 @@ def init_jwt(app, ldap):
     return JWT(app, authenticate, identity)
 
 def listfiles(path):
-    with os.scandir(path) as directory:
+    current_dir = os.path.dirname(__file__)
+    cert_dir = os.path.join(current_dir, cert_dir)
+    with os.scandir(cert_dir) as directory:
         return [entry.name for entry in directory if entry.is_file()]
 
 def list_certificates(state=None):
