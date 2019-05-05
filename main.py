@@ -1,3 +1,4 @@
+import sys
 from flask import Flask
 from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
@@ -40,4 +41,4 @@ def index():
     return "%s" % current_identity
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=int(sys.argv[1]), debug=True)
