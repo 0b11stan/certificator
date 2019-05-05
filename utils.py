@@ -56,7 +56,8 @@ def init_jwt(app, ldap):
 def listfiles(path):
     cert_dir = absolute_path(path)
     with os.scandir(cert_dir) as directory:
-        return [entry.name for entry in directory if entry.is_file()]
+        files = [entry.name for entry in directory if entry.is_file()]
+        return files if files is not None else []
 
 
 def list_certificates(state=None):
@@ -67,6 +68,6 @@ def list_certificates(state=None):
     elif CertState.REVOKED.value == state:
         return listfiles('certificates/revoked')
     else:
-        return listfiles('certificates/pending').append(
-               listfiles('certificates/issued')).append(
-               listfiles('certificates/revoked'))
+        return listfiles('certificates/pending') +
+               listfiles('certificates/issued') +
+               listfiles('certificates/revoked')
