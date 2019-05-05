@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_simpleldap import LDAP
 from flask_jwt import JWT
