@@ -7,17 +7,18 @@ from flask_jwt import JWT, jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
 class User(object):
-    def __init__(self, username, groups):
-        self.username = username
+    def __init__(self, id, groups):
+        self.id = id
         self.groups = groups
 
     def __str__(self):
-        return "username : {}\ngroups : {}".format(self.username, self.groups)
+        return "username : {}\ngroups : {}".format(self.id, self.groups)
 
 def authenticate(username, password):
-    user = ldap.bind_user(username, password)
-    if user and password != '':
-        print(json.dumps(ldap.get_object_details(user=username)))
+    binded = ldap.bind_user(username, password)
+    if binded and password != '':
+        user_groups = ldap.get_user_groups(user=username)
+        user = User(username, user_groups)
         return user
 
 def identity(payload):
@@ -41,7 +42,7 @@ jwt = JWT(app, authenticate, identity)
 @app.route("/")
 @jwt_required()
 def index():
-    return "%s" % current_identity
+    return "%s\n" % current_identity
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(sys.argv[1]), debug=True)
