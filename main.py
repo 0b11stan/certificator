@@ -3,7 +3,7 @@ import json
 
 from utils import init_flask, init_ldap, init_jwt, list_certificates
 
-from flask import request
+from flask import request, Response
 from flask_jwt import jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
@@ -24,8 +24,7 @@ def certificates():
     if request.method == 'GET':
         return json.dumps(list_certificates(state=request.args.get('filter')))
     elif request.method == 'POST':
-        content = json.loads(request.data['request'])
-        current_identity.create_cert_request(content)
+        current_identity.create_cert_request(str(request.data))
         return Response("success", status=200)
 
 
