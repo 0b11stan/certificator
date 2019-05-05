@@ -37,14 +37,14 @@ def listfiles(path):
     with os.scandir(path) as directory:
         return [entry.name for entry in directory if entry.is_file()]
 
-def list_certificates(state=None):
+def list_certificates():
     if CertState.PENDING.value == state:
         return listfiles('certificates/pending')
     elif CertState.ISSUED.value == state:
         return listfiles('certificates/issued')
     elif CertState.REVOKED.value == state:
         return listfiles('certificates/revoked')
-    else:
+    elif state == None:
         return [
             list_certificates(CertState.PENDING.value),
             list_certificates(CertState.ISSUED.value),
