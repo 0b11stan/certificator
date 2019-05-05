@@ -16,7 +16,7 @@ def init_ldap(app):
     app.config['LDAP_USER_OBJECT_FILTER'] = '(sAMAccountName=%s)'
     return LDAP(app)
 
-def init_jwt(app):
+def init_jwt(app, ldap):
 
     def authenticate(username, password):
         binded = ldap.bind_user(username, password)

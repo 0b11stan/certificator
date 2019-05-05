@@ -9,7 +9,7 @@ from werkzeug.security import safe_str_cmp
 
 app  = init_flask()
 ldap = init_ldap(app)
-jwt  = init_jwt(app)
+jwt  = init_jwt(app, ldap)
 
 @app.route("/")
 @jwt_required()
