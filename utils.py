@@ -68,6 +68,6 @@ def list_certificates(state=None):
     elif CertState.REVOKED.value == state:
         return listfiles('certificates/revoked')
     else:
-        return listfiles('certificates/pending') +
-               listfiles('certificates/issued') +
-               listfiles('certificates/revoked')
+        return listfiles('certificates/pending').append(
+               listfiles('certificates/issued')).append(
+               listfiles('certificates/revoked'))
