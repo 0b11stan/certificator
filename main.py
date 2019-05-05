@@ -13,14 +13,14 @@ class User(object):
         return "username : {}\ngroups : {}".format(self.username, self.groups)
 
 def authenticate(username, password):
-    #user = username_table.get(username, None)
     user = ldap.bind_user(username, password)
     if user and password != '':
         return user
 
 def identity(payload):
-    user_id = payload['identity']
-    return userid_table.get(user_id, None)
+    user_name = payload['identity']
+    user_groups = ldap.get_user_groups(user=user_name)
+    return User(user_name, user_groups)
 
 app = Flask(__name__)
 app.debug = True
