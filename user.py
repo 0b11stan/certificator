@@ -19,7 +19,7 @@ class User(object):
         return "username : {}\ngroups : {}".format(self.id, self.groups)
 
     def create_cert_request(self, content):
-        path = "certificates/pending/" + self.id + "_" + int(time.time()) + ".csr"
+        path = "certificates/pending/{}_{}.csr".format(self.id, int(time.time()))
         f = open(utils.absolute_path(path), "w+")
         f.write(content)
         f.close()
