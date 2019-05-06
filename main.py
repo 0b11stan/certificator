@@ -24,7 +24,7 @@ def certificates():
     if request.method == 'GET':
         return json.dumps(list_certificates(state=request.args.get('filter')))
     elif request.method == 'POST':
-        current_identity.create_cert_request(str(request.data))
+        current_identity.create_cert_request(request.get_data().decode('utf-8'))
         return Response("success", status=200)
 
 
