@@ -1,4 +1,4 @@
-import datetime
+import time
 import os
 import utils
 
@@ -19,8 +19,7 @@ class User(object):
         return "username : {}\ngroups : {}".format(self.id, self.groups)
 
     def create_cert_request(self, content):
-        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-        path = "certificates/pending/" + self.id + "_" + timestamp + ".csr"
+        path = "certificates/pending/" + self.id + "_" + int(time.time()) + ".csr"
         f = open(utils.absolute_path(path), "w+")
         f.write(content)
         f.close()
