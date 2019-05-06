@@ -6,7 +6,7 @@
 | GET    | /cert | ?filter=PENDING |            | List pending certificate signin requests |
 | GET    | /cert | ?filter=ISSUED  |            | List delivered certificates              |
 | GET    | /cert | ?filter=REVOKED |            | List revoked certificates                |
-| POST   | /cert |                 | '<base64>' | Add a new certificate request            |
+| POST   | /cert |                 | `<base64>` | Add a new certificate request            |
 
 ## Todo :
 
