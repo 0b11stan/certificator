@@ -83,8 +83,9 @@ def detail_certificate(cert_id):
     subject = req.get_subject()
     algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else None
     size = key.bits()
+    details = {}
 
-    for key, val in dict(subject.get_components()):
+    for key, val in dict(subject.get_components()).items():
         details[key.decode()] = val.decode()
 
     return {
