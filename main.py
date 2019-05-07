@@ -1,15 +1,14 @@
 import sys
 import json
-
-from utils import init_flask, init_ldap, init_jwt, list_certificates
+import utils
 
 from flask import request, Response
 from flask_jwt import jwt_required, current_identity
 from werkzeug.security import safe_str_cmp
 
-app  = init_flask()
-ldap = init_ldap(app)
-jwt  = init_jwt(app, ldap)
+app  = utils.init_flask()
+ldap = utils.init_ldap(app)
+jwt  = utils.init_jwt(app, ldap)
 
 
 @app.route("/")
@@ -22,7 +21,7 @@ def index():
 @jwt_required()
 def certificates():
     if request.method == 'GET':
-        return json.dumps(list_certificates(state=request.args.get('filter')))
+        return json.dumps(utils.list_certificates(state=request.args.get('filter')))
     elif request.method == 'POST':
         current_identity.create_cert_request(request.get_data().decode('utf-8'))
         return Response("success", status=200)
@@ -32,7 +31,7 @@ def certificates():
 @jwt_required()
 def certificate_details(cert_id):
     if request.method == 'GET':
-        return json.dumps(detail_certificate(cert_id))
+        return json.dumps(utils.detail_certificate(cert_id))
     elif request.method == 'DELETE':
         revoke_certificates(cert_id)
 

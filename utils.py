@@ -77,8 +77,8 @@ def list_certificates(state=None):
 
 def detail_certificate(cert_id):
     csr_file = open("certificates/pending/{}.csr".format(cert_id), "r")
-    file_content = f.read()
-    req = OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, csrContent)
+    file_content = csr_file.read()
+    req = OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
     key = req.get_pubkey()
     subject = req.get_subject()
     algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else 'DSA'
