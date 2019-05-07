@@ -32,7 +32,7 @@ def certificates():
 @jwt_required()
 def certificate_details(cert_id):
     if request.method == 'GET':
-        list_certificates(cert_id)
+        return json.dumps(detail_certificate(cert_id))
     elif request.method == 'DELETE':
         revoke_certificates(cert_id)
 

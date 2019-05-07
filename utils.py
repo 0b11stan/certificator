@@ -1,9 +1,12 @@
 import os
+import OpenSSL.crypto
 
 from flask import Flask
 from flask_simpleldap import LDAP
 from flask_jwt import JWT
 from user import User, CertState
+from OpenSSL.crypto import FILETYPE_PEM
+
 
 def absolute_path(relative_path):
     current_dir = os.path.dirname(__file__)
@@ -71,3 +74,37 @@ def list_certificates(state=None):
         return listfiles('certificates/pending') \
              + listfiles('certificates/issued') \
              + listfiles('certificates/revoked')
+
+def detail_certificate(cert_id):
+    csr_file = open("certificates/pending/{}.csr".format(cert_id), "r")
+    file_content = f.read()
+    req = OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, csrContent)
+    key = req.get_pubkey()
+    subject = req.get_subject()
+    algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else 'DSA'
+    size = key.bits()
+
+    for key, val in dict(subject.get_components()).items():
+        key, val = key.decode(), val.decode()
+        common_name       = val if key == "CN"   else None
+        organization      = val if key == "O"    else None
+        organization_unit = val if key == "OU"   else None
+        city              = val if key == "L"    else None
+        state             = val if key == "S"    else None
+        country           = val if key == "C"    else None
+        mail              = val if key == "MAIL" else None
+
+    return {
+        "algorithm": algorithm,
+        "size": size,
+        "details": {
+            "CN": common_name,
+            "O": organization,
+            "OU": organization_unit,
+            "L": city,
+            "S": state,
+            "C": country,
+            "MAIL": mail,
+        }
+    }
+
