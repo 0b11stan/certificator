@@ -81,30 +81,23 @@ def detail_certificate(cert_id):
     req = OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
     key = req.get_pubkey()
     subject = req.get_subject()
-    algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else 'DSA'
+    algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else None
     size = key.bits()
 
-    for key, val in dict(subject.get_components()).items():
-        key, val = key.decode(), val.decode()
-        common_name       = val if key == "CN"   else None
-        organization      = val if key == "O"    else None
-        organization_unit = val if key == "OU"   else None
-        city              = val if key == "L"    else None
-        state             = val if key == "S"    else None
-        country           = val if key == "C"    else None
-        mail              = val if key == "MAIL" else None
+    for key, val in dict(subject.get_components()):
+        details[key.decode()] = val.decode()
 
     return {
         "algorithm": algorithm,
         "size": size,
         "details": {
-            "CN": common_name,
-            "O": organization,
-            "OU": organization_unit,
-            "L": city,
-            "S": state,
-            "C": country,
-            "MAIL": mail,
+            "CN": details["CN"],
+            "O": details["O"],
+            "OU": details["OU"],
+            "L": details["L"],
+            "ST": details["ST"],
+            "C": details["C"],
+            "MAIL": details["emailAddress"],
         }
     }
 
