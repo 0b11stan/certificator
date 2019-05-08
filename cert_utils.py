@@ -7,6 +7,43 @@ def get_pending_cert(cert_id):
     return OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
 
 
+def issue_cert(cert_id)
+    cert = cert_utils.create_certificate(
+        get_ca_private_key(), get_ca_cert(), get_pending_cert(cert_id)
+    )
+    cert_buffer = OpenSSL.crypto.dump_certificate(FILETYPE_PEM, cert)
+    cert_file = open("certificates/issued/{}.cer".format(cert_id), "w")
+    cert_file.write(cert_buffer)
+    cert_file.close()
+
+
+def read(path):
+    file_content = open(path, "r")
+    return file_content.read().strip()
+
+
+def read_secret_passphrase():
+    return read("../secret/passphrase")
+
+
+def read_secret_key():
+    return read("../secret/intermediate.key")
+
+
+def read_secret_cert():
+    return read("../secret/intermediate.cert")
+
+
+def get_ca_private_key():
+    # TODO : use a callback to get passphrase, avoiding memory dump
+    secret = read_secret_passphrase().encode('utf-8')
+    return OpenSSL.crypto.load_privatekey(FILETYPE_PEM, read_secret_key(), passphrase=secret)
+
+
+def get_ca_cert():
+    return OpenSSL.crypto.load_certificate(FILETYPE_PEM, read_secret_cert())
+
+
 def detail_csr(csr):
     key = csr.get_pubkey()
     subject = csr.get_subject()
