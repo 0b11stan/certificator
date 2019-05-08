@@ -1,3 +1,6 @@
+import OpenSSL.crypto
+from OpenSSL.crypto import FILETYPE_PEM
+
 def get_pending_cert(cert_id):
     csr_file = open("certificates/pending/{}.csr".format(cert_id), "r")
     file_content = csr_file.read()

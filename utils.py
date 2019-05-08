@@ -1,12 +1,9 @@
 import os
-import OpenSSL.crypto
 
 from flask import Flask
 from flask_simpleldap import LDAP
 from flask_jwt import JWT
 from user import User, CertState
-from OpenSSL.crypto import FILETYPE_PEM
-
 
 def absolute_path(relative_path):
     current_dir = os.path.dirname(__file__)
