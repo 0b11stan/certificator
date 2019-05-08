@@ -39,7 +39,7 @@ def certificate_details(cert_id):
         return Response(body, status=200)
     elif request.method == 'POST':
         if 'Domain Admins' in current_identity.groups:
-            issue_cert(cert_id)
+            cert_utils.issue_cert(cert_id)
             return Response(status=204)
         else: return Response("forbidden", status=403)
     elif request.method == 'DELETE':

@@ -7,7 +7,7 @@ def get_pending_cert(cert_id):
     return OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
 
 
-def issue_cert(cert_id)
+def issue_cert(cert_id):
     cert = cert_utils.create_certificate(
         get_ca_private_key(), get_ca_cert(), get_pending_cert(cert_id)
     )
