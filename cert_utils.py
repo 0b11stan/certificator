@@ -1,3 +1,4 @@
+import os
 import OpenSSL.crypto
 from OpenSSL.crypto import FILETYPE_PEM
 
