@@ -8,13 +8,15 @@ def get_pending_cert(cert_id):
 
 
 def issue_cert(cert_id):
-    cert = cert_utils.create_certificate(
+    csr_path = "certificates/issued/{}.cer".format(cert_id)
+    cert = create_certificate(
         get_ca_private_key(), get_ca_cert(), get_pending_cert(cert_id)
     )
     cert_buffer = OpenSSL.crypto.dump_certificate(FILETYPE_PEM, cert)
-    cert_file = open("certificates/issued/{}.cer".format(cert_id), "w")
-    cert_file.write(cert_buffer)
+    cert_file = open(csr_path, "w")
+    cert_file.write(str(cert_buffer))
     cert_file.close()
+    os.remove(csr_path)
 
 
 def read(path):
@@ -70,7 +72,7 @@ def detail_csr(csr):
 
 
 def create_certificate(ca_private_key, ca_cert, client_csr):
-    cert = crypto.X509()
+    cert = OpenSSL.crypto.X509()
     #cert.set_serial_number(serial_no)
     #cert.gmtime_adj_notBefore(notBeforeVal)
     #cert.gmtime_adj_notAfter(notAfterVal)
