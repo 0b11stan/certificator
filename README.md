@@ -8,10 +8,10 @@ A simple web API to manage a certification authority in your AD domain.
 - You sould have an intermediate certificate signed by you AD.
 - This certificate and your CA private key should be accessible in a readonly directory
 
-secret/
-├── intermediate.cert (your CA certificate)
-├── intermediate.key (your CA private key)
-└── passphrase (the passphrase of your private key)
+secret/\
+├── intermediate.cert (your CA certificate)\
+├── intermediate.key (your CA private key)\
+└── passphrase (the passphrase of your private key)\
 
 ## Done :
 
@@ -23,8 +23,3 @@ secret/
 | GET    | /cert | ?filter=REVOKED |            | List revoked certificates                |
 | POST   | /cert |                 | `<base64>` | Add a new certificate request            |
 
-## Todo :
-
-- CLI pour lister les csr
-- CLI pour délivrer les certificats
-- WEB pour révoker des certificats

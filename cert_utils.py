@@ -27,15 +27,15 @@ def read(path):
 
 
 def read_secret_passphrase():
-    return read("../secret/passphrase")
+    return read("secret/passphrase")
 
 
 def read_secret_key():
-    return read("../secret/intermediate.key")
+    return read("secret/intermediate.key")
 
 
 def read_secret_cert():
-    return read("../secret/intermediate.cert")
+    return read("secret/intermediate.cert")
 
 
 def get_ca_private_key():
