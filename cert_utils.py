@@ -15,8 +15,8 @@ def issue_cert(cert_id):
         get_ca_private_key(), get_ca_cert(), get_pending_cert(cert_id)
     )
     cert_buffer = OpenSSL.crypto.dump_certificate(FILETYPE_PEM, cert)
-    cert_file = open(cer_path, "w")
-    cert_file.write(str(cert_buffer))
+    cert_file = open(cer_path, "bw")
+    cert_file.write(cert_buffer)
     cert_file.close()
     os.remove(csr_path)
 
