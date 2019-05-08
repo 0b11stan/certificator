@@ -1,13 +1,10 @@
 # certificator
 
-NOT PROD READY : this project is under heavy developement
-
 A simple web API to manage a certification authority in your AD domain.
 
 - The linux server running certificator should belong to your AD.
-- You sould have an intermediate certificate signed by you AD.
-- This certificate and your CA private key should be accessible in a readonly directory
-
+- You should have an intermediate CA certificate signed by you AD under a directory called secret.
+- The secret directory under your project's root :
 secret/\
 ├── intermediate.cert (your CA certificate)\
 ├── intermediate.key (your CA private key)\
