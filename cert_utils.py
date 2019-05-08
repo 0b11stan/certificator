@@ -1,9 +1,12 @@
-def detail_certificate(cert_id):
+def get_pending_cert(cert_id):
     csr_file = open("certificates/pending/{}.csr".format(cert_id), "r")
     file_content = csr_file.read()
-    req = OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
-    key = req.get_pubkey()
-    subject = req.get_subject()
+    return OpenSSL.crypto.load_certificate_request(FILETYPE_PEM, file_content)
+
+
+def detail_csr(csr):
+    key = csr.get_pubkey()
+    subject = csr.get_subject()
     algorithm = 'RSA' if key.type() == OpenSSL.crypto.TYPE_RSA else None
     size = key.bits()
     details = {}
@@ -25,3 +28,14 @@ def detail_certificate(cert_id):
         }
     }
 
+
+def create_certificate(ca_private_key, ca_cert, client_csr):
+    cert = crypto.X509()
+    #cert.set_serial_number(serial_no)
+    #cert.gmtime_adj_notBefore(notBeforeVal)
+    #cert.gmtime_adj_notAfter(notAfterVal)
+    cert.set_issuer(ca_cert.get_subject())
+    cert.set_subject(client_csr.get_subject())
+    cert.set_pubkey(client_csr.get_pubkey())
+    cert.sign(ca_private_key, "sha256")
+    return cert
