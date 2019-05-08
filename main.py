@@ -1,6 +1,7 @@
 import sys
 import json
 import utils
+import cert_utils
 
 from flask import request, Response
 from flask_jwt import jwt_required, current_identity
@@ -31,7 +32,7 @@ def certificates():
 @jwt_required()
 def certificate_details(cert_id):
     if request.method == 'GET':
-        return json.dumps(utils.detail_certificate(cert_id))
+        return json.dumps(cert_utils.detail_certificate(cert_id))
     elif request.method == 'DELETE':
         revoke_certificates(cert_id)
 
